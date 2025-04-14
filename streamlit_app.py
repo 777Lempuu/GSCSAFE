@@ -31,7 +31,7 @@ class AudioCNN(torch.nn.Module):
         self.fc_input_size = None
 
     def forward(self, x):
-        x = self.pool(torch.nn.functional.relu(self.bn1(self.conv1(x)))
+        x = self.pool(torch.nn.functional.relu(self.bn1(self.conv1(x))))
         x = self.pool(torch.nn.functional.relu(self.bn2(self.conv2(x))))
         x = self.pool(torch.nn.functional.relu(self.bn3(self.conv3(x))))
         
