@@ -16,7 +16,7 @@ N_MFCC = 40
 N_FFT = 400
 HOP_LENGTH = 160
 MODEL_URL = "https://drive.google.com/uc?id=1FdVrAZqoQ2Xz0GBEzDWTnexqWoX-oh6j"
-MODEL_PATH = "best_model_safestudent.pt"
+MODEL_PATH = "best_model_safestudent.pth"
 SUPPORTED_FORMATS = ['wav', 'mp3', 'flac', 'ogg', 'aac', 'm4a']
 
 # Add safe globals for numpy scalar types
@@ -57,21 +57,28 @@ def load_model():
         with st.spinner('Downloading model from Google Drive...'):
             gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
     
+    # First initialize with correct number of classes (35)
+    model = AudioCNN(num_classes=35)
+    
     # Load with explicit weights_only=False since we trust the source
     checkpoint = torch.load(MODEL_PATH, map_location='cpu', weights_only=False)
-    model = AudioCNN(num_classes=len(get_labels()))
+    
+    # Now reinitialize with actual number of classes from checkpoint
+    num_classes = checkpoint['teacher_state_dict']['fc2.weight'].shape[0]
+    model = AudioCNN(num_classes=num_classes)
     model.load_state_dict(checkpoint['teacher_state_dict'])
     model.eval()
     return model
 
 @st.cache_data
 def get_labels():
-    return [
+    # These should match your training labels exactly
+    return sorted([
         'backward', 'bed', 'bird', 'cat', 'dog', 'down', 'eight', 'five', 'follow',
         'forward', 'four', 'go', 'happy', 'house', 'learn', 'left', 'marvin', 'nine',
         'no', 'off', 'on', 'one', 'right', 'seven', 'sheila', 'six', 'stop', 'three',
         'tree', 'two', 'up', 'visual', 'wow', 'yes', 'zero'
-    ]
+    ])
 
 def load_audio_file(uploaded_file):
     try:
