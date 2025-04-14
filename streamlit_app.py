@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from torchaudio.transforms import Resample, MFCC
 import soundfile as sf
 import io
+import torch.serialization
 
 # Configuration
 SAMPLE_RATE = 16000
@@ -17,6 +18,9 @@ HOP_LENGTH = 160
 MODEL_URL = "https://drive.google.com/uc?id=1FdVrAZqoQ2Xz0GBEzDWTnexqWoX-oh6j"
 MODEL_PATH = "best_model_safestudent.pt"
 SUPPORTED_FORMATS = ['wav', 'mp3', 'flac', 'ogg', 'aac', 'm4a']
+
+# Add safe globals for numpy scalar types
+torch.serialization.add_safe_globals([np.core.multiarray.scalar])
 
 class AudioCNN(torch.nn.Module):
     def __init__(self, num_classes):
@@ -43,7 +47,7 @@ class AudioCNN(torch.nn.Module):
             self.fc1 = torch.nn.Linear(self.fc_input_size, 512).to(x.device)
         
         x = x.view(x.size(0), -1)
-        x = self.dropout(torch.nn.functional.relu(self.fc1(x)))
+        x = self.dropout(torch.nn.functional.relu(self.fc1(x))))
         x = self.fc2(x)
         return x
 
@@ -53,7 +57,8 @@ def load_model():
         with st.spinner('Downloading model from Google Drive...'):
             gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
     
-    checkpoint = torch.load(MODEL_PATH, map_location='cpu')
+    # Load with explicit weights_only=False since we trust the source
+    checkpoint = torch.load(MODEL_PATH, map_location='cpu', weights_only=False)
     model = AudioCNN(num_classes=len(get_labels()))
     model.load_state_dict(checkpoint['teacher_state_dict'])
     model.eval()
@@ -82,6 +87,7 @@ def load_audio_file(uploaded_file):
         return torch.from_numpy(data).float().unsqueeze(0), sample_rate
     except Exception as e:
         st.error(f"Error loading audio file: {str(e)}")
+        st.error("Supported formats: WAV, MP3, FLAC, OGG, AAC, M4A")
         return None, None
 
 def preprocess_audio(waveform, sample_rate):
