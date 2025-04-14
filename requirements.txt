@@ -8,3 +8,4 @@ scipy
 tqdm
 Pillow
 librosa
+soundfile
