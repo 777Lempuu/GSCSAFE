@@ -1,25 +1,7 @@
-# 📦 Streamlit App Starter Kit 
+GOOGLE SPEECH COMMANDS V2 VIA SAFE STUDENT
 ```
-⬆️ (Replace above with your app's name)
+⬆️
+
 ```
-
-Description of the app ...
-
-## Demo App
-
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://app-starter-kit.streamlit.app/)
-
-## GitHub Codespaces
-
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/app-starter-kit?quickstart=1)
-
-## Section Heading
-
-This is filler text, please replace this with text for this section.
-
-## Further Reading
-
-This is filler text, please replace this with a explanatory text about further relevant resources for this repo
-- Resource 1
-- Resource 2
-- Resource 3
+JUST USE SAME TEMPLATE OF THIS GITHUB REPO THEN GO TO STREAMLIT , CREATE APP VIA GITHUB AND SELECT THIS REPO AND YOU ARE GOOD TO GO .
+ML MODELS ARE DOWNLOADED FROM GOOGLE DRIVE.
